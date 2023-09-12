@@ -16,21 +16,21 @@ public class CarView {
     @Autowired
     Controller controller;
     @GetMapping("/car")
-    public Car findCar(@PathParam("name") String cname){
-        return controller.findCar(cname);
+    public Car findCar(@PathParam("name") String cname, @PathParam("brand") String brand){
+        return controller.findCar(cname, brand);
     }
 
 
     @DeleteMapping("/car")
     public String deleteCar(@PathParam("name") String cname, @PathParam("marca") String brand){
-        controller.removeCar(cname);
+        controller.removeCar(cname, brand);
 
         return "O carro: " + cname + " da marca: " +brand+ " foi deletado";
     }
 
     @PostMapping("/car")
-    public Car addCar(@PathParam("name") String cname, @PathParam("marca") String brand){
-        return controller.addCar(cname, brand);
+    public Car addCar(@PathParam("name") String cname, @PathParam("marca") String brand, @PathParam("gastoGasolinaMEDIA") String gasMC, @PathParam("gastoAlcoolMEDIA") String alcMC, @PathParam("flex") Boolean flex){
+        return controller.addCar(cname, brand, gasMC, alcMC, flex);
     }
 
     @PutMapping("/car")

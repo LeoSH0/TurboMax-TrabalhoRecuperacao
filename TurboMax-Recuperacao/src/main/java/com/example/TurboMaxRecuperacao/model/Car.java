@@ -32,4 +32,28 @@ public class Car {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    public String getGasMC() {
+        return gasMC;
+    }
+
+    public void setGasMC(String gasMC) {
+        this.gasMC = gasMC;
+    }
+
+    public String getAlcMC() {
+        return alcMC;
+    }
+
+    public void setAlcMC(String alcMC) {
+        this.alcMC = alcMC;
+    }
+
+    public Boolean getFlex() {
+        return flex;
+    }
+
+    public void setFlex(Boolean flex) {
+        this.flex = flex;
+    }
 }
