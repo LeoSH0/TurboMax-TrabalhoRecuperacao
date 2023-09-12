@@ -23,7 +23,7 @@ public class CarView {
 
     @DeleteMapping("/car")
     public String deleteCar(@PathParam("name") String cname, @PathParam("marca") String brand){
-        controller.removeCar(cname, brand);
+        controller.deleteCar(cname, brand);
 
         return "O carro: " + cname + " da marca: " +brand+ " foi deletado";
     }

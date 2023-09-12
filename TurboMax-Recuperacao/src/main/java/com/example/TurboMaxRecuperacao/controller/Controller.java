@@ -46,14 +46,14 @@ public class Controller {
         return car;
     }
 
-    public void removeCar(String cname, String brand) {
+    public void deleteCar(String cname, String brand) {
         Car car = findCar(cname, brand);
         carRepository.delete(car);
     }
 
-
-
     public List<Car> listAll() {
         return (List<Car>) carRepository.findAll();
     }
+
+
 }

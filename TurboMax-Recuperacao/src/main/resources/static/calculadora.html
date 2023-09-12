@@ -5,6 +5,33 @@
     <title>Quanto eu gastei?</title>
 </head>
 <body>
+   <h1>Minha Calculadora</h1>
+
+   Quilometros andados<br />
+    <input id="n1" type="KmAndado" /><br />
+   KM/L que meu carro faz<br />
+    <input id="n2" type="KmLCarro" /><br />
+   Preço da gasolina/Alcool<br />
+   <input id="n3" type="custo" /><br />
+
+<button onclick="calcular()">Calcular</button>
+<br />
+   O seu gasto de combustível foi de: <span></span>
+
+<script>
+
+    var n1 = document.querySelector('#n1')
+    var n2 = document.querySelector('#n2')
+    var resultado = document.querySelector('span')
+
+    function calcular(){
+
+    resultado.innerHTML = parseINt(n1.value) / parseInt(n2.value) * parseInt(n3.value)
+
+
+    }
+
+</script>
 
 </body>
 </html>
