@@ -1,79 +1,158 @@
 package com.example.TurboMaxRecuperacao.controller;
 
 import com.example.TurboMaxRecuperacao.model.Car;
+import com.example.TurboMaxRecuperacao.model.GasCar;
 import com.example.TurboMaxRecuperacao.model.GasUsed;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.List;
 
-public class CalculatorController {
 
-        @Autowired
-        private CalcRepository calcRepository;
-        @Autowired
-        private Controller controller;
-        private Long n = 0L;
+public class CalculatorController implements combCar {
 
-        @Override
-        public Double sacar(Double quantidade, Conta conta) {
-            return null;
+    StringBuilder message = new StringBuilder();
+    @Autowired
+    private CalcRepository calcRepository;
+    @Autowired
+    private Controller controller;
+    private Long n = 0L;
+
+
+    public void delete(String cname) {
+        calcRepository.delete(this.consultCar(cname));
+    }
+
+    public GasCar cadCar(String cname, String brand, String gasIN) throws Exception {
+        GasCar gasCar = new GasCar();
+        if (gasIN == null) {
+            message.append("\nÉ necessário que se informe o tipo de combustível usado pelo seu carro!");
+        }
+        switch (gasIN) {
+            case "GASOLINA":
+                GasCar.setGasUsed(GasUsed.VEICULO_GASOLINA);
+                break;
+
+            case "ALCOOL":
+                GasCar.setGasUsed(GasUsed.VEICULO_ALCOOL);
+                break;
+
+            case "FLEX":
+                GasCar.setGasUsed(GasUsed.VEICULO_FLEX);
+                break;
+
+
+            default:
+                message.append("\nEste tipo de combustivel não é suportado!");
+        }
+        Car car = controller.findCar(cname, brand);
+        if (car != null && GasCar.getError() == null) {
+            n++;
+            GasCar.setNumCar(n);
+            GasCar.setCar(car);
+            calcRepository.save(gasCar);
+        } else if (GasCar.getError() == null) {
+            message.append("\nO carro ");
+            message.append(cname).append(" informado não foi cadastrado em nosso sistema!");
+        }
+        if (!message.isEmpty()) {
+            GasCar.setError(message.toString());
         }
 
-        public void delete(String cname) {
-            calcRepository.delete(this.consultaConta(cname));
+        return gasCar;
+    }
+
+    public GasCar consultCar(String cname) {
+
+        List<GasCar> cars = (List<GasCar>) calcRepository.findAll();
+
+        for (GasCar cc : cars) {
+            if (cc.getCar() != null && cc.getCar().getName().equals(cname)) {
+
+                return cc;
+
+
+            }
         }
+        return null;
+    }
 
-        public ContaCorrentePF cadVeiculo(String cname, String GasUsed) throws Exception {
-            ContaCorrentePF contaCorrentePF = new ContaCorrentePF();
-            StringBuilder message = new StringBuilder();
-            if (gasUsed == null) {
-                message.append("\nÉ necessário que se informe o tipo de combustível usado pelo seu carro!");
-            }
-            switch (GasUsed) {
-                case "GASOLINA":
-                    contaGasCar.setGasUsed(GasUsed.VEICULO_GASOLINA);
-                    break;
-                case "ALCOOL":
-                    contaAlcCar.setGasUsed(GasUsed.VEICULO_ALCOOL);
-                default:
-                    message.append("\nTipo da conta não é suportado!");
-            }
-            Car car = controller.findCar(cname, brand);
-            if (car != null && contaCorrentePF.getError() == null) {
-                n++;
-                contaCorrentePF.setNumeroConta(n);
-                contaCorrentePF.setCar(car);
-                calcRepository.save(contaCorrentePF);
-            } else if (contaCorrentePF.getError() == null) {
-                message.append("\nO carro ");
-                message.append(cname).append(" informado não foi cadastrado");
-            }
-            if (!message.isEmpty()) {
-                contaCorrentePF.setError(message.toString());
-            }
+    @Override
+    public Double consultGas(GasCar gas) {
+        return gas.getGas();
+    }
 
-            return contaAlcCar;
+    public GasCar calcFuel(String gasIN, float kmL) {
+
+        float cost, kmAnt, kmT, kmAt, gasPrice, alcPrice;
+
+        String ans = "";
+        gasPrice = 5.86f;
+        alcPrice = 3.93f;
+
+        BufferedReader car = new BufferedReader(new InputStreamReader(System.in));
+
+        if (gasIN == null) {
+            message.append("\nÉ necessário que se informe o tipo de combustível usado pelo seu carro!");
         }
+        switch (gasIN) {
 
-        public ContaGas consultaConta(String cname) {
+            case "GASOLINA":
+                try {
 
-            List<ContaAlcCar> contas = (List<ContaAlcCar>) calcRepository.findAll();
+                    message.append("\nInsira a kilometragem ANTIGA de seu veículo!");
+                    ans = car.readLine();
+                    kmAnt = Float.parseFloat(ans);
 
-            for (ContaAlcCar cc : contas) {
-                if (cc.getCar() != null && cc.getCar().getName().equals(cname)) {
+                    message.append("\nInsira a kilometragem ATUAL de seu veículo!");
+                    ans = car.readLine();
+                    kmAt = Float.parseFloat(ans);
 
-                    return cc;
+                    kmT = kmAt - kmAnt;
 
+                    cost = (kmT / kmL) * gasPrice;
+
+                    message.append("\nVoce andou " + kmT + ", e seu gasto foi de " + cost + " !");
+
+
+                } catch (Exception erro) {
+
+                    message.append("\n Insira apenas números");
 
                 }
-            }
-            return null;
+                break;
+
+            case "ALCOOL":
+                try {
+
+                    message.append("\nInsira a kilometragem ANTIGA de seu veículo!");
+                    ans = car.readLine();
+                    kmAnt = Float.parseFloat(ans);
+
+                    message.append("\nInsira a kilometragem ATUAL de seu veículo!");
+                    ans = car.readLine();
+                    kmAt = Float.parseFloat(ans);
+
+                    kmT = kmAt - kmAnt;
+
+                    cost = (kmT / kmL) * alcPrice;
+
+                    message.append("\nVoce andou " + kmT + ", e seu gasto foi de " + cost + " !");
+
+
+                } catch (Exception erro) {
+
+                    message.append("\n Insira apenas números");
+
+                }
+                break;
+
         }
 
-        @Override
-        public Double consultaSaldo(ContaCorrentePF conta) {
-            return conta.getSaldo();
-        }
+
+        return null;
 
     }
+}
 

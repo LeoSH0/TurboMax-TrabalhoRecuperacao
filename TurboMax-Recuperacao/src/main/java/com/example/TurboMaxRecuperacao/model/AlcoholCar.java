@@ -1,4 +1,4 @@
 package com.example.TurboMaxRecuperacao.model;
 
-public class AlcoholCar {
+public class AlcoholCar extends Gas{
 }
