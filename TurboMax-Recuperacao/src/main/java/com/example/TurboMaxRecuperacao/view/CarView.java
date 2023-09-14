@@ -16,14 +16,14 @@ public class CarView {
     @Autowired
     Controller controller;
     @GetMapping("/car")
-    public Car findCar(@PathParam("name") String cname, @PathParam("brand") String brand){
-        return controller.findCar(cname, brand);
+    public Car findCar(@PathParam("name") String cname, @PathParam("brand") String brand, @PathParam("fuel") String gasIN){
+        return controller.findCar(cname, brand, gasIN);
     }
 
 
     @DeleteMapping("/car")
-    public String deleteCar(@PathParam("name") String cname, @PathParam("marca") String brand){
-        controller.deleteCar(cname, brand);
+    public String deleteCar(@PathParam("name") String cname, @PathParam("marca") String brand, @PathParam("fuel") String gasIN){
+        controller.deleteCar(cname, brand, gasIN);
 
         return "O carro: " + cname + " da marca: " +brand+ " foi deletado";
     }
@@ -34,8 +34,8 @@ public class CarView {
     }
 
     @PutMapping("/car")
-    public Car updateCar(@PathParam("name") String cname, @PathParam("marca") String brand){
-        return controller.editCar(cname, brand);
+    public Car updateCar(@PathParam("name") String cname, @PathParam("marca") String brand, @PathParam("fuel") String gasIN){
+        return controller.editCar(cname, brand, gasIN);
     }
 
     @GetMapping("/all")

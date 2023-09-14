@@ -38,9 +38,9 @@ public class GascalculatorView {
     }
 
     @PutMapping("/calculo")
-    public String calcFuel(@PathParam("fuel") String gasIN, @PathParam("kmL") float kmL){
+    public String calcFuel(@PathParam("fuel") String cname, @PathParam("marca") String brand, @PathParam("fuel") String gasIN, @PathParam("kmL") float kmL){
 
-       return calculatorController.calcFuel(gasIN, kmL).toString();
+       return calculatorController.calcFuel(cname, brand, gasIN, kmL).toString();
     }
 
 

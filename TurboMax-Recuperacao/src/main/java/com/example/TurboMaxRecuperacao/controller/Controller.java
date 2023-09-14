@@ -28,7 +28,7 @@ public class Controller {
         return car;
     }
 
-    public Car findCar(String cname, String brand) {
+    public Car findCar(String cname, String brand, String gasIN) {
         List<Car> cars = (List<Car>) carRepository.findAll();
         for (Car car : cars) {
             if (car.getName().equals(cname) && car.getBrand().equals(brand)) {
@@ -39,15 +39,15 @@ public class Controller {
         return null;
     }
 
-    public Car editCar(String cname, String brand) {
-        Car car = findCar(cname, brand);
+    public Car editCar(String cname, String brand, String gasIN) {
+        Car car = findCar(cname, brand, gasIN);
         car.setBrand(brand);
         carRepository.save(car);
         return car;
     }
 
-    public void deleteCar(String cname, String brand) {
-        Car car = findCar(cname, brand);
+    public void deleteCar(String cname, String brand, String gasIN) {
+        Car car = findCar(cname, brand, gasIN);
         carRepository.delete(car);
     }
 

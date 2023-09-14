@@ -12,7 +12,7 @@ import java.util.List;
 
 public class CalculatorController implements combCar {
 
-    StringBuilder message = new StringBuilder();
+    StringBuilder msg = new StringBuilder();
     @Autowired
     private CalcRepository calcRepository;
     @Autowired
@@ -27,7 +27,7 @@ public class CalculatorController implements combCar {
     public GasCar cadCar(String cname, String brand, String gasIN) throws Exception {
         GasCar gasCar = new GasCar();
         if (gasIN == null) {
-            message.append("\nÉ necessário que se informe o tipo de combustível usado pelo seu carro!");
+            msg.append("\nÉ necessário que se informe o tipo de combustível usado pelo seu carro!");
         }
         switch (gasIN) {
             case "GASOLINA":
@@ -44,25 +44,24 @@ public class CalculatorController implements combCar {
 
 
             default:
-                message.append("\nEste tipo de combustivel não é suportado!");
+                msg.append("\nEste tipo de combustivel não é suportado!");
         }
-        Car car = controller.findCar(cname, brand);
+        Car car = controller.findCar(cname, brand, gasIN);
         if (car != null && GasCar.getError() == null) {
             n++;
             GasCar.setNumCar(n);
             GasCar.setCar(car);
             calcRepository.save(gasCar);
         } else if (GasCar.getError() == null) {
-            message.append("\nO carro ");
-            message.append(cname).append(" informado não foi cadastrado em nosso sistema!");
+            msg.append("\nO carro ");
+            msg.append(cname).append(" informado não foi cadastrado em nosso sistema!");
         }
-        if (!message.isEmpty()) {
-            GasCar.setError(message.toString());
+        if (!msg.isEmpty()) {
+            GasCar.setError(msg.toString());
         }
 
         return gasCar;
     }
-
     public GasCar consultCar(String cname) {
 
         List<GasCar> cars = (List<GasCar>) calcRepository.findAll();
@@ -71,7 +70,6 @@ public class CalculatorController implements combCar {
             if (cc.getCar() != null && cc.getCar().getName().equals(cname)) {
 
                 return cc;
-
 
             }
         }
@@ -83,7 +81,7 @@ public class CalculatorController implements combCar {
         return gas.getGas();
     }
 
-    public GasCar calcFuel(String gasIN, float kmL) {
+    public GasCar calcFuel(String cname, String brand, String gasIN, float kmL) {
 
         float cost, kmAnt, kmT, kmAt, gasPrice, alcPrice;
 
@@ -93,62 +91,74 @@ public class CalculatorController implements combCar {
 
         BufferedReader car = new BufferedReader(new InputStreamReader(System.in));
 
-        if (gasIN == null) {
-            message.append("\nÉ necessário que se informe o tipo de combustível usado pelo seu carro!");
-        }
-        switch (gasIN) {
+        msg.append("\nInforme seu Veículo");
 
-            case "GASOLINA":
-                try {
+        List<GasCar> cars = (List<GasCar>) calcRepository.findAll();
 
-                    message.append("\nInsira a kilometragem ANTIGA de seu veículo!");
-                    ans = car.readLine();
-                    kmAnt = Float.parseFloat(ans);
+        for (GasCar cc : cars) {
+            if (cc.getCar() != null && cc.getCar().getName().equals(cname)) {
 
-                    message.append("\nInsira a kilometragem ATUAL de seu veículo!");
-                    ans = car.readLine();
-                    kmAt = Float.parseFloat(ans);
+                return cc;
 
-                    kmT = kmAt - kmAnt;
+            }
 
-                    cost = (kmT / kmL) * gasPrice;
-
-                    message.append("\nVoce andou " + kmT + ", e seu gasto foi de " + cost + " !");
+                msg.append("\nInforme o tipo de combustível que desejas calcular!");
 
 
-                } catch (Exception erro) {
+                if (cc.getCar() != null && cc.getCar().getName().equals(gasIN) && cc.getCar().getGasMC() == "GASOLINA") {
 
-                    message.append("\n Insira apenas números");
+
+                    try {
+
+                        msg.append("\nInsira a kilometragem ANTIGA de seu veículo!");
+                        ans = car.readLine();
+                        kmAnt = Float.parseFloat(ans);
+
+                        msg.append("\nInsira a kilometragem ATUAL de seu veículo!");
+                        ans = car.readLine();
+                        kmAt = Float.parseFloat(ans);
+
+                        kmT = kmAt - kmAnt;
+
+                        cost = (kmT / kmL) * gasPrice;
+
+                        msg.append("\nVoce andou " + kmT + ", e seu gasto foi de " + cost + " !");
+
+
+                    } catch (Exception erro) {
+
+                        msg.append("\n Insira apenas números");
+
+                    }
+                }else{
+
+                    try {
+
+                        msg.append("\nInsira a kilometragem ANTIGA de seu veículo!");
+                        ans = car.readLine();
+                        kmAnt = Float.parseFloat(ans);
+
+                        msg.append("\nInsira a kilometragem ATUAL de seu veículo!");
+                        ans = car.readLine();
+                        kmAt = Float.parseFloat(ans);
+
+                        kmT = kmAt - kmAnt;
+
+                        cost = (kmT / kmL) * alcPrice;
+
+                        msg.append("\nVoce andou " + kmT + ", e seu gasto foi de " + cost + " !");
+
+
+                    } catch (Exception erro) {
+
+                        msg.append("\n Insira apenas números");
+
+                    }
 
                 }
-                break;
+            msg.append("\n O carro escolhido não é flex, escolha o tipo de combustivel correto");
 
-            case "ALCOOL":
-                try {
-
-                    message.append("\nInsira a kilometragem ANTIGA de seu veículo!");
-                    ans = car.readLine();
-                    kmAnt = Float.parseFloat(ans);
-
-                    message.append("\nInsira a kilometragem ATUAL de seu veículo!");
-                    ans = car.readLine();
-                    kmAt = Float.parseFloat(ans);
-
-                    kmT = kmAt - kmAnt;
-
-                    cost = (kmT / kmL) * alcPrice;
-
-                    message.append("\nVoce andou " + kmT + ", e seu gasto foi de " + cost + " !");
-
-
-                } catch (Exception erro) {
-
-                    message.append("\n Insira apenas números");
-
-                }
-                break;
-
-        }
+            }
 
 
         return null;
